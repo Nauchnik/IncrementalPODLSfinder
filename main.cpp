@@ -16,7 +16,7 @@ As a result for all such DLSs own CNF is constructed. The goal is to find for ev
 std::vector<int> makeLiterals(dls cur_dls);
 void normalizeLS(dls &cur_DLS);
 std::vector<dls> getSetUniqueDLS(std::vector<odls_pair> odls_pair_vec);
-void processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls);
+unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls);
 dls getDLSfromSolutionFile(std::string solutionfile_name);
 void printDLS(dls cur_dls);
 
@@ -70,14 +70,22 @@ int main( int argc, char **argv )
 
 	// get unique DLSs from the known pairs of ODLS
 	unique_dls_vec = getSetUniqueDLS( odls_pair_vec );
+	std::vector<unsigned> sat_count_vec;
+	sat_count_vec.resize(unique_dls_vec.size());
 	
+	unsigned k = 0;
 	for (auto &x : unique_dls_vec)
-		processDLS(cnf_var_count, init_cnf_sstream, x);
+		sat_count_vec[k++] = processDLS(cnf_var_count, init_cnf_sstream, x);
+	
+	k = 0;
+	std::cout << "final sat count" << std::endl;
+	for (auto &x : sat_count_vec)
+		std::cout << "sat count for DLS # " << k++ << " " << x << std::endl;
 	
 	return 0;
 }
 
-void processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls)
+unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls)
 {
 	// make CNF for every unique DLS
 	unsigned row_index, column_index;
@@ -165,6 +173,7 @@ void processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls
 		forbidden_DLS_literals.clear();
 	}
 	std:: cout << "final sat_count " << sat_count << std::endl;
+	return sat_count;
 }
 
 // normalize LS by 1st row
