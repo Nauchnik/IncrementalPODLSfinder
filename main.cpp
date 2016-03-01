@@ -19,6 +19,7 @@ std::vector<dls> getSetUniqueDLS(std::vector<odls_pair> odls_pair_vec);
 unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls);
 dls getDLSfromSolutionFile(std::string solutionfile_name);
 void printDLS(dls cur_dls);
+void makeHtmlData();
 
 int main( int argc, char **argv )
 {
@@ -26,51 +27,8 @@ int main( int argc, char **argv )
 	argc = 3;
 	argv[1] = "D:/Tests/ferrumsat/Latin Square encodings/ls10_2_diag.cnf";
 	argv[2] = "D:/Programming/pdsat/src_common/ODLS_10_pairs.txt";
+	makeHtmlData();
 #endif
-	
-	std::ifstream ifile("pseudotriple.txt");
-	std::string str, tmp_str, cur_dls_row;
-	dls cur_dls;
-	std::vector<dls> dls_vec;
-	std::stringstream sstream;
-	while ( getline(ifile, str) ) {
-		if (str.size() < 18) continue;
-		sstream << str;
-		while (sstream >> tmp_str) {
-			cur_dls_row += tmp_str;
-			if (cur_dls_row.size() == 10) {
-				cur_dls.push_back(cur_dls_row);
-				cur_dls_row = "";
-			}
-			if ( cur_dls.size() == 10 ) {
-				dls_vec.push_back(cur_dls);
-				cur_dls.clear();
-			}
-		}
-		sstream.clear(); sstream.str("");
-	}
-	ifile.close();
-
-	std::ofstream html_data_file("html_data.txt");
-	for (unsigned i = 1; i < dls_vec.size(); i++) {
-		sstream << "<tr>" << std::endl;
-		sstream << "<td> " << i << " </td>" << std::endl;
-		sstream << "<td>" << std::endl;
-		sstream << "<FONT SIZE = -2>" << std::endl;
-		for (unsigned j = 0; j < 10; j++) {
-			for (unsigned j2 = 0; j2 < 10; j2++)
-				sstream << dls_vec[0][j][j2] << " ";
-			sstream << "&nbsp;&nbsp ";
-			for (unsigned j2 = 0; j2 < 10; j2++)
-				sstream << dls_vec[i][j][j2] << " ";
-			sstream << "<br>" << std::endl;
-		}
-		sstream << "</FONT>" << std::endl;
-		sstream << "</td>" << std::endl;
-		sstream << "</tr>" << std::endl;
-	}
-	html_data_file << sstream.str();
-	html_data_file.close();
 	
 	if (argc != 3) {
 		std::cerr << "Usage: [CNF that encodes the problem of search for PODLS of order 10] [file with known PODLS]";
@@ -84,7 +42,8 @@ int main( int argc, char **argv )
 		std::cerr << "file " << init_cnf_file_name << " wasn't open" << std::endl;
 		return 1;
 	}
-	std::stringstream init_cnf_sstream;
+	std::stringstream sstream, init_cnf_sstream;
+	std::string str;
 	unsigned cnf_var_count = 0;
 	while (getline(init_cnf_file, str)) {
 		init_cnf_sstream << str << std::endl;
@@ -350,4 +309,51 @@ void printDLS(dls cur_dls)
 				std::cout << " ";
 		}
 	}
+}
+
+void makeHtmlData()
+{
+	std::ifstream ifile("pseudotriple.txt");
+	std::string str, tmp_str, cur_dls_row;
+	dls cur_dls;
+	std::vector<dls> dls_vec;
+	std::stringstream sstream;
+	while (getline(ifile, str)) {
+		if (str.size() < 18) continue;
+		sstream << str;
+		while (sstream >> tmp_str) {
+			cur_dls_row += tmp_str;
+			if (cur_dls_row.size() == 10) {
+				cur_dls.push_back(cur_dls_row);
+				cur_dls_row = "";
+			}
+			if (cur_dls.size() == 10) {
+				dls_vec.push_back(cur_dls);
+				cur_dls.clear();
+			}
+		}
+		sstream.clear(); sstream.str("");
+	}
+	ifile.close();
+
+	std::ofstream html_data_file("html_data.txt");
+	for (unsigned i = 1; i < dls_vec.size(); i++) {
+		sstream << "<tr>" << std::endl;
+		sstream << "<td> " << i << " </td>" << std::endl;
+		sstream << "<td>" << std::endl;
+		sstream << "<FONT SIZE = -2>" << std::endl;
+		for (unsigned j = 0; j < 10; j++) {
+			for (unsigned j2 = 0; j2 < 10; j2++)
+				sstream << dls_vec[0][j][j2] << " ";
+			sstream << "&nbsp;&nbsp ";
+			for (unsigned j2 = 0; j2 < 10; j2++)
+				sstream << dls_vec[i][j][j2] << " ";
+			sstream << "<br>" << std::endl;
+		}
+		sstream << "</FONT>" << std::endl;
+		sstream << "</td>" << std::endl;
+		sstream << "</tr>" << std::endl;
+	}
+	html_data_file << sstream.str();
+	html_data_file.close();
 }
