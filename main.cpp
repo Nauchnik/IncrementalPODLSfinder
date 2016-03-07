@@ -28,8 +28,9 @@ int main( int argc, char **argv )
 	argc = 3;
 	argv[1] = "D:/Tests/ferrumsat/Latin Square encodings/ls10_2_diag.cnf";
 	argv[2] = "D:/Programming/pdsat/src_common/ODLS_10_pairs.txt";
-	constructOLS();
-	makeHtmlData();
+	//constructOLS();
+	//makeHtmlData();
+	makeCnfsKnownData();
 #endif
 	
 	if (argc != 3) {
