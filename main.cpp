@@ -28,9 +28,6 @@ int main( int argc, char **argv )
 	argc = 3;
 	argv[1] = "D:/Tests/ferrumsat/Latin Square encodings/ls10_2_diag.cnf";
 	argv[2] = "D:/Programming/pdsat/src_common/ODLS_10_pairs.txt";
-	//constructOLS();
-	//makeHtmlData();
-	makeCnfsKnownData();
 #endif
 	
 	if (argc != 3) {
@@ -346,51 +343,4 @@ void constructOLS()
 	odls_pseudotriple pseudotriple;
 	odls_seq.makePseudotriple(odls_p, dls_vec[2], pseudotriple);
 	std::cout << pseudotriple.unique_orthogonal_cells.size();
-}
-
-void makeHtmlData()
-{
-	std::ifstream ifile("pseudotriple.txt");
-	std::string str, tmp_str, cur_dls_row;
-	dls cur_dls;
-	std::vector<dls> dls_vec;
-	std::stringstream sstream;
-	while (getline(ifile, str)) {
-		if (str.size() < 18) continue;
-		sstream << str;
-		while (sstream >> tmp_str) {
-			cur_dls_row += tmp_str;
-			if (cur_dls_row.size() == 10) {
-				cur_dls.push_back(cur_dls_row);
-				cur_dls_row = "";
-			}
-			if (cur_dls.size() == 10) {
-				dls_vec.push_back(cur_dls);
-				cur_dls.clear();
-			}
-		}
-		sstream.clear(); sstream.str("");
-	}
-	ifile.close();
-
-	std::ofstream html_data_file("html_data.txt");
-	for (unsigned i = 1; i < dls_vec.size(); i++) {
-		sstream << "<tr>" << std::endl;
-		sstream << "<td> " << i << " </td>" << std::endl;
-		sstream << "<td>" << std::endl;
-		sstream << "<FONT SIZE = -2>" << std::endl;
-		for (unsigned j = 0; j < 10; j++) {
-			for (unsigned j2 = 0; j2 < 10; j2++)
-				sstream << dls_vec[0][j][j2] << " ";
-			sstream << "&nbsp;&nbsp ";
-			for (unsigned j2 = 0; j2 < 10; j2++)
-				sstream << dls_vec[i][j][j2] << " ";
-			sstream << "<br>" << std::endl;
-		}
-		sstream << "</FONT>" << std::endl;
-		sstream << "</td>" << std::endl;
-		sstream << "</tr>" << std::endl;
-	}
-	html_data_file << sstream.str();
-	html_data_file.close();
 }
