@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="minisat">
+      <UniqueIdentifier>{7618d14c-9a86-40cc-82db-62e1ff8c847e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,12 +24,51 @@
     <ClCompile Include="..\pdsat\src_common\latin_squares.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\pdsat\src_common\minisat\core\Solver.cc">
+      <Filter>minisat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pdsat\src_common\minisat\utils\Options.cc">
+      <Filter>minisat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pdsat\src_common\minisat\utils\System.cc">
+      <Filter>minisat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pdsat\src_common\minisat22_wrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pdsat\src_common\addit_func.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\pdsat\src_common\latin_squares.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat\core\Solver.h">
+      <Filter>minisat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat\core\SolverTypes.h">
+      <Filter>minisat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat\core\Dimacs.h">
+      <Filter>minisat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat\utils\Options.h">
+      <Filter>minisat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat\utils\ParseUtils.h">
+      <Filter>minisat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat\utils\System.h">
+      <Filter>minisat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\minisat22_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdsat\src_common\addit_func.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

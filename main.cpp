@@ -13,7 +13,6 @@ As a result for all such DLSs own CNF is constructed. The goal is to find for ev
 #include <ctime>
 #include "../pdsat/src_common/latin_squares.h"
 
-std::vector<int> makeLiterals(dls cur_dls);
 unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls);
 dls getDLSfromSolutionFile(std::string solutionfile_name);
 
@@ -65,7 +64,7 @@ int main( int argc, char **argv )
 	std::vector<dls> unique_dls_vec;
 
 	// get unique DLSs from the known pairs of ODLS
-	unique_dls_vec = getSetUniqueDLS(odls_seq.odls_pair_vec );
+	unique_dls_vec = ls.getSetUniqueDLS(ls.odls_pair_vec );
 	std::vector<unsigned> sat_count_vec;
 	sat_count_vec.resize(unique_dls_vec.size());
 	
@@ -137,7 +136,8 @@ unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream,
 		system(system_str.c_str());
 		// read output of a SAT solver
 		dls_from_output = getDLSfromSolutionFile(out_incremental_file_name);
-		printDLS(dls_from_output);
+		latin_square ls;
+		ls.printDLS(dls_from_output);
 		isSATfound = (dls_from_output.size() > 0) ? true : false;
 		if (!isSATfound) {
 			std::cout << "UNSAT" << std::endl;
@@ -145,7 +145,7 @@ unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream,
 		}
 		sat_count++;
 		std::cout << "current sat_count " << sat_count << std::endl;
-		forbidden_DLS_literals = makeLiterals(dls_from_output);
+		forbidden_DLS_literals = ls.makeLiteralsFromLS(dls_from_output);
 		std::cout << "forbidden_DLS_literals.size() " << forbidden_DLS_literals.size() << std::endl;
 
 		// construct clauses for forbidding current assumption
@@ -214,49 +214,4 @@ dls getDLSfromSolutionFile( std::string solutionfile_name)
 	
 	solutionfile.close();
 	return new_dls;
-}
-
-void printDLS(dls cur_dls)
-{
-	for (unsigned i = 0; i < cur_dls.size(); i++) {
-		for (unsigned j = 0; j < cur_dls[i].size(); j++) {
-			std::cout << cur_dls[i][j];
-			if (j != cur_dls[i].size() - 1)
-				std::cout << " ";
-		}
-	}
-}
-
-void constructOLS()
-{
-	std::ifstream ifile("MayBeTriple.txt");
-	std::string str, tmp_str, cur_dls_row;
-	dls cur_dls;
-	std::vector<dls> dls_vec;
-	std::stringstream sstream;
-	while (getline(ifile, str)) {
-		if (str.size() < 18) continue;
-		sstream << str;
-		while (sstream >> tmp_str) {
-			cur_dls_row += tmp_str;
-			if (cur_dls_row.size() == 10) {
-				cur_dls.push_back(cur_dls_row);
-				cur_dls_row = "";
-			}
-			if (cur_dls.size() == 10) {
-				dls_vec.push_back(cur_dls);
-				cur_dls.clear();
-			}
-		}
-		sstream.clear(); sstream.str("");
-	}
-	ifile.close();
-
-	odls_sequential odls_seq; 
-	odls_pair odls_p;
-	odls_p.dls_1 = dls_vec[0];
-	odls_p.dls_2 = dls_vec[1];
-	odls_pseudotriple pseudotriple;
-	odls_seq.makePseudotriple(odls_p, dls_vec[2], pseudotriple);
-	std::cout << pseudotriple.unique_orthogonal_cells.size();
 }

@@ -44,7 +44,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../pdsat/src_common/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../pdsat/src_common/;../;../pdsat/src_common/minisat/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,14 +67,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\pdsat\src_common\addit_func.cpp" />
     <ClCompile Include="..\pdsat\src_common\latin_squares.cpp" />
+    <ClCompile Include="..\pdsat\src_common\minisat22_wrapper.cpp" />
+    <ClCompile Include="..\pdsat\src_common\minisat\core\Solver.cc" />
+    <ClCompile Include="..\pdsat\src_common\minisat\utils\Options.cc" />
+    <ClCompile Include="..\pdsat\src_common\minisat\utils\System.cc" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\pdsat\src_common\addit_func.h" />
     <ClInclude Include="..\pdsat\src_common\latin_squares.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat22_wrapper.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat\core\Dimacs.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat\core\Solver.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat\core\SolverTypes.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat\utils\Options.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat\utils\ParseUtils.h" />
+    <ClInclude Include="..\pdsat\src_common\minisat\utils\System.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
