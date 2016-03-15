@@ -18,16 +18,16 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Programming\DiagonalLatinSquaresGenerator\odls_sequential.cpp">
+    <ClCompile Include="..\pdsat\src_common\latin_squares.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\Programming\DiagonalLatinSquaresGenerator\odls_sequential.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Makefile" />
+    <ClInclude Include="..\pdsat\src_common\latin_squares.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

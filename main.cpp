@@ -11,16 +11,11 @@ As a result for all such DLSs own CNF is constructed. The goal is to find for ev
 #include <fstream>
 #include <vector>
 #include <ctime>
-#include "odls_sequential.h"
+#include "../pdsat/src_common/latin_squares.h"
 
 std::vector<int> makeLiterals(dls cur_dls);
-void normalizeLS(dls &cur_DLS);
-std::vector<dls> getSetUniqueDLS(std::vector<odls_pair> odls_pair_vec);
 unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream, dls cur_dls);
 dls getDLSfromSolutionFile(std::string solutionfile_name);
-void printDLS(dls cur_dls);
-void constructOLS();
-void makeHtmlData();
 
 int main( int argc, char **argv )
 {
@@ -61,11 +56,11 @@ int main( int argc, char **argv )
 		std::cerr << "cnf_var_count " << cnf_var_count << std::endl;
 		return 1;
 	}
-		
+	
 	// read all known PODLS of order 10
 	std::string known_podls_file_name = argv[2];
-	odls_sequential odls_seq;
-	odls_seq.readOdlsPairs(known_podls_file_name);
+	latin_square ls;
+	ls.readOdlsPairs(known_podls_file_name);
 	// construct a set of unique DLSs from these pairs
 	std::vector<dls> unique_dls_vec;
 
@@ -175,85 +170,6 @@ unsigned processDLS(unsigned cnf_var_count, std::stringstream &init_cnf_sstream,
 	}
 	std:: cout << "final sat_count " << sat_count << std::endl;
 	return sat_count;
-}
-
-// normalize LS by 1st row
-void normalizeLS(dls &cur_DLS)
-{
-	char ch;
-	dls new_DLS;
-	unsigned LS_order = cur_DLS.size();
-	new_DLS.resize(cur_DLS.size());
-	for (unsigned i = 0; i < LS_order; i++)
-		new_DLS[i].resize(LS_order);
-	for (unsigned i = 0; i < LS_order; i++) {
-		ch = cur_DLS[0][i];
-		for (unsigned j = 0; j < LS_order; j++)
-			for (unsigned j2 = 0; j2 < LS_order; j2++) {
-				if (cur_DLS[j][j2] == ch)
-					new_DLS[j][j2] = '0' + i;
-			}
-	}
-	cur_DLS = new_DLS;
-}
-
-// Only literals which correspond to 1 are to be made
-std::vector<int> makeLiterals(dls cur_dls)
-{
-	std::vector<int> result_vec;
-	unsigned row_index, column_index;
-	for (row_index = 1; row_index < cur_dls.size() - 1; row_index++) { // skip row # 0 - it if fixed already
-		for (column_index = 0; column_index < cur_dls[0].size() - 1; column_index++)
-			result_vec.push_back( 1000 * 1 + 100 * row_index + 10 * column_index + (cur_dls[row_index][column_index] - 48) + 1 );
-	}
-	return result_vec;
-}
-
-std::vector<dls> getSetUniqueDLS(std::vector<odls_pair> odls_pair_vec)
-{
-	std::vector<dls> unique_dls_vec;
-
-	bool isInsertRequired;
-
-	for (auto &x : odls_pair_vec) {
-		if (x.dls_1[0] != "0123456789") {
-			normalizeLS(x.dls_1);
-			for (auto &y : x.dls_1) {
-				for (auto &y2 : y)
-					std::cout << y2 << " ";
-				std::cout << std::endl;
-			}
-			std::cout << std::endl;
-		}
-		if (x.dls_2[0] != "0123456789") {
-			normalizeLS(x.dls_2);
-			for (auto &y : x.dls_2) {
-				for (auto &y2 : y)
-					std::cout << y2 << " ";
-				std::cout << std::endl;
-			}
-			std::cout << std::endl;
-		}
-		isInsertRequired = true;
-		for (auto &y : unique_dls_vec)
-			if (y == x.dls_1) {
-				isInsertRequired = false;
-				break;
-			}
-		if (isInsertRequired)
-			unique_dls_vec.push_back(x.dls_1);
-		//
-		isInsertRequired = true;
-		for (auto &y : unique_dls_vec)
-			if (y == x.dls_2) {
-				isInsertRequired = false;
-				break;
-			}
-		if (isInsertRequired)
-			unique_dls_vec.push_back(x.dls_2);
-	}
-
-	return unique_dls_vec;
 }
 
 dls getDLSfromSolutionFile( std::string solutionfile_name)
